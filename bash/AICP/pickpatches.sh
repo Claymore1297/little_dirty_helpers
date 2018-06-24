@@ -17,6 +17,7 @@
 #
 if [ ! $ANDROID_BUILD_TOP ];then
 	echo "please run build/envsetup.sh first"
+	exit 1
 fi
 
 cd $ANDROID_BUILD_TOP
@@ -36,3 +37,4 @@ for i in $getPatchFiles;do
        fi
     done <$i
 done
+exit 0
