@@ -14,16 +14,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#
+# relative path to envsetup.sh in android build environment
+ENVSETUP_SCRIPT="build/envsetup.sh"
+
+# check for the basedir of the build env
+if  [ $# == 1 ] && [ -d $1 ];then
+   ANDROID_BUILD_TOP=$1
+fi
 if [ ! $ANDROID_BUILD_TOP ];then
-	echo "please run build/envsetup.sh first"
+	echo -e "\nERROR: please run . $ENVSETUP_SCRIPT first or define root of your build-environment as first argument of this script"
+	echo "Usage: $0 <path to android build env>"
 	exit 1
 fi
 
 cd $ANDROID_BUILD_TOP
-. build/envsetup.sh
-getPatchFiles=$(find $ANDROID_BUILD_TOP/device -name patches.txt)
+# if envsetup.sh exists, run it or abort
+if [ -f $ENVSETUP_SCRIPT ];then
+    . $ENVSETUP_SCRIPT
+else
+   echo "ERROR: script $ENVSETUP_SCRIPT not exist!"
+   exit 1
+fi
 
+# search for patches.txt in device-dir
+getPatchFiles=$(find $ANDROID_BUILD_TOP/device -name patches.txt)
+# parse found files
 for i in $getPatchFiles;do
     echo -e "found patches.txt-file: $i\n"
     while read line
