@@ -42,7 +42,7 @@ if ( is_dir ( $base_dir ))
         while (($file = readdir($handle)) !== false)
         {
             if (preg_match("/aicp_".$device."/i", $file)) {
-            $get_md5 = md5($file);
+            $get_md5 = md5_file("/var/www/html_81/builds/".$file);
             $get_filesize = filesizemb($base_dir."/".$file);
             array_push($data1, array('name' => $file,'version' => "13.1-WEEKLY\no-13.1",'size' => $get_filesize,'url' => $base_url.'/'.$file,'md5' => $get_md5));
         }
@@ -55,3 +55,4 @@ $json = json_encode($data, JSON_UNESCAPED_SLASHES);
 // return json object
 echo $json;
 ?>
+
