@@ -16,10 +16,12 @@
  */
 // get device
 $device = $_GET['device'];
+// get type
+$type = $_GET['type'];
 // base dir on local server
 $base_dir = "/var/www/html/builds";
 // needed sub directory structure
-$builds_sub_dirs = "device/".$device."/WEEKLY/";
+$builds_sub_dirs = "device/".$device."/".$type."/";
 // complete path
 $builds_complete_dirs = $base_dir."/".$builds_sub_dirs;
 
@@ -66,7 +68,7 @@ if ( is_dir ( $builds_complete_dirs ))
         {
             if (preg_match("/aicp_".$device."/i", $eachFile))
             {
-                $SplitFileName1 = explode("WEEKLY-", $eachFile);
+                $SplitFileName1 = explode($type."-", $eachFile);
                 $SplitFileName2 = explode(".", $SplitFileName1[1]);
                 echo $SplitFileName2[0];
                 getFileBuildDate($builds_complete_dirs."/".$eachFile);
