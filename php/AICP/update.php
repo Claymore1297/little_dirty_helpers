@@ -14,45 +14,69 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-// base dir on local server
-$base_dir = "/var/www/html_81/builds";
-// base url for OTAs
-$base_url = 'http://heimdal:81/builds';
-
+// get device
 $device = $_GET['device'];
-$data =array();
-$data ['device'] = $device;
-$data1 = array();
+// base dir on local server
+$base_dir = "/var/www/html/builds";
+// needed sub directory structure
+$builds_sub_dirs = "device/".$device."/WEEKLY/";
+// complete path
+$builds_complete_dirs = $base_dir."/".$builds_sub_dirs;
 
 ###########################
-function filesizemb($file)
+function getFileBuildDate($CurrentZipFile)
 {
-    return number_format(filesize($file) / pow(1024, 2), 0,'.','');
+$zip = zip_open($CurrentZipFile);
+if ($zip)
+   {
+   while ($zip_entry = zip_read($zip))
+      {
+          if (zip_entry_name($zip_entry) == "system/build.prop")
+          {
+             if (zip_entry_open($zip, $zip_entry))
+               {
+                  $contents = zip_entry_read($zip_entry);
+                  $getEachrow = explode(" ", $contents);
+                  for ($x = 0; $x < count($getEachrow); $x++)
+                     {
+                         preg_match("/ro.build.date.utc=([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])/",$getEachrow[$x-1],$Matches);
+                         if ($Matches[0])
+                            {
+                               $getRoBuildDate = explode("=", $Matches[0]);
+                               echo " ".$getRoBuildDate[1];
+                            }
+                     }
+                  zip_entry_close($zip_entry);
+               }
+         }
+      }
+zip_close($zip);
+   }
 }
 ###########################
 
 // dir exist?
-if ( is_dir ( $base_dir ))
+if ( is_dir ( $builds_complete_dirs ))
 {
     // open dir
-    if ( $handle = opendir($base_dir) )
+    if ( $handle = opendir($builds_complete_dirs) )
     {
         // read dir
-        while (($file = readdir($handle)) !== false)
+        while (($eachFile = readdir($handle)) !== false)
         {
-            if (preg_match("/aicp_".$device."/i", $file)) {
-            $get_md5 = md5_file("/var/www/html_81/builds/".$file);
-            $get_filesize = filesizemb($base_dir."/".$file);
-            array_push($data1, array('name' => $file,'version' => "13.1-WEEKLY\no-13.1",'size' => $get_filesize,'url' => $base_url.'/'.$file,'md5' => $get_md5));
+            if (preg_match("/aicp_".$device."/i", $eachFile))
+            {
+                $SplitFileName1 = explode("WEEKLY-", $eachFile);
+                $SplitFileName2 = explode(".", $SplitFileName1[1]);
+                echo $SplitFileName2[0];
+                getFileBuildDate($builds_complete_dirs."/".$eachFile);
+            }
         }
-    }
-    $data ['updates'] = $data1;
     closedir($handle);
     }
 }
-$json = json_encode($data, JSON_UNESCAPED_SLASHES);
-// return json object
-echo $json;
+else
+{
+   echo "directory: ".$builds_complete_dirs." doesn't exist!!!</br>";
+}
 ?>
-
