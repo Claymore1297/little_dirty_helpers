@@ -93,6 +93,6 @@ if ( is_dir ( $builds_complete_dirs ))
 }
 else
 {
-   echo "directory: ".$builds_complete_dirs." doesn't exist!!!</br>";
+   echo "<h4>directory: ".$builds_complete_dirs." doesn't exist!!!</h4>";
 }
 ?>
