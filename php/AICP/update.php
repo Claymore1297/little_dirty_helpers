@@ -34,33 +34,34 @@ $builds_complete_dirs = $base_dir."/".$builds_sub_dirs;
 # extract from given ROM-file ro.build.date.utc from file system/build.prop
 function getFileBuildUtc($CurrentZipFile)
 {
-$zip = zip_open($CurrentZipFile);
-$FileBuildUtc;
-if ($zip)
-   {
-   while ($zip_entry = zip_read($zip))
-      {
-          if (zip_entry_name($zip_entry) == "system/build.prop")
-          {
-             if (zip_entry_open($zip, $zip_entry))
-               {
-                  $contents = zip_entry_read($zip_entry);
-                  $getEachrow = explode(" ", $contents);
-                  for ($x = 0; $x < count($getEachrow); $x++)
-                     {
-                         preg_match("/ro.build.date.utc=([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])/",$getEachrow[$x-1],$Matches);
-                         if ($Matches[0])
+    $zip = zip_open($CurrentZipFile);
+    // setting a dummy value to avoid errors if no ro.build.date.utc has been found.
+    $FileBuildUtc = 1;
+    if ($zip)
+    {
+        while ($zip_entry = zip_read($zip))
+        {
+            if (zip_entry_name($zip_entry) == "system/build.prop")
+            {
+                if (zip_entry_open($zip, $zip_entry))
+                {
+                    $contents = zip_entry_read($zip_entry);
+                    $getEachrow = explode(" ", $contents);
+                    for ($x = 0; $x < count($getEachrow); $x++)
+                        {
+                            preg_match("/ro.build.date.utc=([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])/",$getEachrow[$x-1],$Matches);
+                            if ($Matches[0])
                             {
                                $getRoBuildUtc = explode("=", $Matches[0]);
                                $FileBuildUtc = $getRoBuildUtc[1];
                             }
-                     }
-                  zip_entry_close($zip_entry);
-               }
-         }
-      }
-zip_close($zip);
-}
+                        }
+                    zip_entry_close($zip_entry);
+                }
+            }
+        }
+        zip_close($zip);
+    }
 return $FileBuildUtc;
 }
 ###########################
@@ -80,14 +81,15 @@ if ( is_dir ( $builds_complete_dirs ))
             {
                 $SplitFileName1 = explode($type."-", $eachFile);
                 $SplitFileName2 = explode(".", $SplitFileName1[1]);
-                $UpdateDate = $SplitFileName2[0];
+                // set output value including needed space
+                $UpdateDate = $SplitFileName2[0]." ";
                 $UpdateUtc = getFileBuildUtc($builds_complete_dirs."/".$eachFile);
             }
         }
     closedir($handle);
     }
     // Output for frontend
-    echo $UpdateDate." ".$UpdateUtc;
+    echo $UpdateDate.$UpdateUtc;
 }
 else
 {
