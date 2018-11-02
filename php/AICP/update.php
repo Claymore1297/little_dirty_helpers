@@ -18,6 +18,11 @@
 $device = $_GET['device'];
 // get type
 $type = $_GET['type'];
+// check call params
+if (empty($device)|| empty($type))
+{
+    echo "<h3>missing params device and type</h3>";
+}
 // base dir on local server
 $base_dir = "/var/www/html/builds";
 // needed sub directory structure
@@ -26,9 +31,11 @@ $builds_sub_dirs = "device/".$device."/".$type."/";
 $builds_complete_dirs = $base_dir."/".$builds_sub_dirs;
 
 ###########################
-function getFileBuildDate($CurrentZipFile)
+# extract from given ROM-file ro.build.date.utc from file system/build.prop
+function getFileBuildUtc($CurrentZipFile)
 {
 $zip = zip_open($CurrentZipFile);
+$FileBuildUtc;
 if ($zip)
    {
    while ($zip_entry = zip_read($zip))
@@ -44,8 +51,8 @@ if ($zip)
                          preg_match("/ro.build.date.utc=([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])/",$getEachrow[$x-1],$Matches);
                          if ($Matches[0])
                             {
-                               $getRoBuildDate = explode("=", $Matches[0]);
-                               echo " ".$getRoBuildDate[1];
+                               $getRoBuildUtc = explode("=", $Matches[0]);
+                               $FileBuildUtc = $getRoBuildUtc[1];
                             }
                      }
                   zip_entry_close($zip_entry);
@@ -53,13 +60,16 @@ if ($zip)
          }
       }
 zip_close($zip);
-   }
+}
+return $FileBuildUtc;
 }
 ###########################
 
 // dir exist?
 if ( is_dir ( $builds_complete_dirs ))
 {
+    $UpdateDate;
+    $UpdateUts;
     // open dir
     if ( $handle = opendir($builds_complete_dirs) )
     {
@@ -70,12 +80,14 @@ if ( is_dir ( $builds_complete_dirs ))
             {
                 $SplitFileName1 = explode($type."-", $eachFile);
                 $SplitFileName2 = explode(".", $SplitFileName1[1]);
-                echo $SplitFileName2[0];
-                getFileBuildDate($builds_complete_dirs."/".$eachFile);
+                $UpdateDate = $SplitFileName2[0];
+                $UpdateUtc = getFileBuildUtc($builds_complete_dirs."/".$eachFile);
             }
         }
     closedir($handle);
     }
+    // Output for frontend
+    echo $UpdateDate." ".$UpdateUtc;
 }
 else
 {
