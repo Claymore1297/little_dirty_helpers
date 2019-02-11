@@ -47,8 +47,10 @@ for i in $getPatchFiles;do
            commitId=$(echo $line | cut -d " " -f 1)
            commitUrl=$(echo $line | cut -d " " -f 2)
            commitRepo=$(echo $line | cut -d " " -f 3)
-# start picking
-           repopick $commitId -g $commitUrl -P $commitRepo
+	   if [ $commitId ] && [ $commitUrl ] && [ $commitRepo ];then
+               # start picking
+               repopick $commitId -g $commitUrl -P $commitRepo
+           fi
        fi
     done <$i
 done
