@@ -89,7 +89,7 @@ if ( is_dir ( $builds_complete_dirs ))
     closedir($handle);
     }
     // Output for frontend
-    echo $UpdateDate.$UpdateUtc;
+    echo $UpdateDate.$UpdateUtc." p-14.0 14.0-".$type;
 }
 else
 {
