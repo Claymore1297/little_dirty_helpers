@@ -31,6 +31,13 @@ $builds_sub_dirs = "device/".$device."/".$type."/";
 $builds_complete_dirs = $base_dir."/".$builds_sub_dirs;
 
 ###########################
+function filesizemb($file)
+{
+    return number_format(filesize($file) / pow(1024, 2), 0,'.','');
+}
+###########################
+#
+###########################
 # extract from given ROM-file ro.build.date.utc from file system/build.prop
 function getFileBuildUtc($CurrentZipFile)
 {
@@ -71,6 +78,8 @@ if ( is_dir ( $builds_complete_dirs ))
 {
     $UpdateDate;
     $UpdateUts;
+    $UpdateMd5;
+    $UpdateFileSize;
     // open dir
     if ( $handle = opendir($builds_complete_dirs) )
     {
@@ -84,12 +93,14 @@ if ( is_dir ( $builds_complete_dirs ))
                 // set output value including needed space
                 $UpdateDate = $SplitFileName2[0]." ";
                 $UpdateUtc = getFileBuildUtc($builds_complete_dirs."/".$eachFile);
+                $UpdateFileSize = filesizemb($builds_complete_dirs."/".$eachFile);
+                $UpdateMd5 = md5_file($builds_complete_dirs."/".$eachFile);
             }
         }
     closedir($handle);
     }
     // Output for frontend
-    echo $UpdateDate.$UpdateUtc." p-14.0 14.0-".$type;
+    echo $UpdateDate.$UpdateUtc." p-14.0 14.0-".$type." ".$UpdateFileSize." ".$UpdateMd5;
 }
 else
 {
