@@ -33,7 +33,7 @@ $builds_complete_dirs = $base_dir."/".$builds_sub_dirs;
 ###########################
 function filesizemb($file)
 {
-    return number_format(filesize($file) / pow(1024, 2), 0,'.','');
+    return number_format(filesize($file) / pow(1024, 2), 0,'.','')*1024*1024;
 }
 ###########################
 #
