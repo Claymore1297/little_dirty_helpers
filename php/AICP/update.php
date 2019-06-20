@@ -101,7 +101,7 @@ if ( is_dir ( $builds_complete_dirs ))
                 $UpdateUtc = getFileBuildUtc($builds_complete_dirs."/".$eachFile);
                 $UpdateFileSize = filesizemb($builds_complete_dirs."/".$eachFile);
                 $UpdateMd5 = md5_file($builds_complete_dirs."/".$eachFile);
-		array_push($json_data_raw, array('datetime' => intval($UpdateDate),
+		array_push($json_data_raw, array('datetime' => intval($UpdateUtc),
 			'filename' => $eachFile, 'id' => $UpdateMd5, 'romtype' => $type,
 			'size' => intval($UpdateFileSize), 'url' => $base_server_url.$builds_sub_dirs.$eachFile,
 			'version' => "14.0"));
