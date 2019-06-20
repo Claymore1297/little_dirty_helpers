@@ -14,6 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+$json_data = array();
+$json_data_raw = array();
 // get device
 $device = $_GET['device'];
 // get type
@@ -25,6 +27,8 @@ if (empty($device)|| empty($type))
 }
 // base dir on local server
 $base_dir = "/var/www/html/builds";
+// base webserver URL
+$base_server_url = "http://heimdal/builds/";
 // needed sub directory structure
 $builds_sub_dirs = "device/".$device."/".$type."/";
 // complete path
@@ -73,6 +77,7 @@ return $FileBuildUtc;
 }
 ###########################
 
+$flag_builds_found = 0;
 // dir exist?
 if ( is_dir ( $builds_complete_dirs ))
 {
@@ -87,7 +92,8 @@ if ( is_dir ( $builds_complete_dirs ))
         while (($eachFile = readdir($handle)) !== false)
         {
             if (preg_match("/aicp_".$device."/i", $eachFile))
-            {
+	    {
+                $flag_builds_found = 1;
                 $SplitFileName1 = explode($type."-", $eachFile);
                 $SplitFileName2 = explode(".", $SplitFileName1[1]);
                 // set output value including needed space
@@ -95,12 +101,21 @@ if ( is_dir ( $builds_complete_dirs ))
                 $UpdateUtc = getFileBuildUtc($builds_complete_dirs."/".$eachFile);
                 $UpdateFileSize = filesizemb($builds_complete_dirs."/".$eachFile);
                 $UpdateMd5 = md5_file($builds_complete_dirs."/".$eachFile);
+		array_push($json_data_raw, array('datetime' => intval($UpdateDate),
+			'filename' => $eachFile, 'id' => $UpdateMd5, 'romtype' => $type,
+			'size' => intval($UpdateFileSize), 'url' => $base_server_url.$builds_sub_dirs.$eachFile,
+			'version' => "14.0"));
             }
-        }
-    closedir($handle);
+	}
     }
-    // Output for frontend
-    echo $UpdateDate.$UpdateUtc." p-14.0 14.0-".$type." ".$UpdateFileSize." ".$UpdateMd5;
+    if ($flag_builds_found == 1)
+    {
+        closedir($handle);
+        $json_data ['response'] = $json_data_raw;
+        $json = json_encode($json_data, JSON_UNESCAPED_SLASHES);
+        // return json object
+        echo $json;
+    }
 }
 else
 {
