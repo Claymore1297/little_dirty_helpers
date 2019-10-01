@@ -61,9 +61,9 @@ function getFileBuildUtc($CurrentZipFile)
                     $getEachrow = explode(" ", $contents);
                     for ($x = 0; $x < count($getEachrow); $x++)
                         {
-                            preg_match("/ro.build.date.utc=([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])/",$getEachrow[$x-1],$Matches);
+                            preg_match("/ro.system.build.date.utc=([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])/",$getEachrow[$x-1],$Matches);
                             if ($Matches[0])
-                            {
+                        {
                                $getRoBuildUtc = explode("=", $Matches[0]);
                                $FileBuildUtc = $getRoBuildUtc[1];
                             }
@@ -105,7 +105,7 @@ if ( is_dir ( $builds_complete_dirs ))
 		array_push($json_data_raw, array('datetime' => intval($UpdateUtc),
 			'filename' => $eachFile, 'id' => $UpdateMd5, 'romtype' => $type,
 			'size' => intval($UpdateFileSize), 'url' => $base_server_url.$builds_sub_dirs.$eachFile,
-			'version' => "p-14.0"));
+			'version' => "q-15.0"));
             }
 	}
     }
