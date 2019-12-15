@@ -29,7 +29,7 @@ if (empty($device)|| empty($type))
 // base dir on local server
 $base_dir = "/var/www/html/builds";
 // base webserver URL
-$base_server_url = "http://heimdal/builds/";
+$base_server_url = "http://fenris/builds/";
 // needed sub directory structure
 $builds_sub_dirs = "device/".$device."/".$type."/";
 // complete path
