@@ -120,6 +120,6 @@ if ( is_dir ( $builds_complete_dirs ))
 }
 else
 {
-   echo "<h4>directory: ".$builds_complete_dirs." doesn't exist!!!</h4>";
+   echo "{\"response\":[{\"datetime\":1970,\"filename\":\"placeholder\",\"id\":\"placeholder\",\"romtype\":\"WEEKLY\",\"size\":1048576,\"url\":\"placeholder\",\"version\":\"00.0\"}]}";
 }
 ?>
