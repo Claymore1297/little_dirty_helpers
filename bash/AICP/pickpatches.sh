@@ -37,7 +37,7 @@ else
 fi
 
 # search for patches.txt in device-dir
-getPatchFiles=$(find $ANDROID_BUILD_TOP/device -name patches.txt)
+getPatchFiles=$(find $ANDROID_BUILD_TOP/device/$1 -name patches.txt)
 # parse found files
 for i in $getPatchFiles;do
     echo -e "found patches.txt-file: $i\n"
@@ -47,9 +47,11 @@ for i in $getPatchFiles;do
            commitId=$(echo $line | cut -d " " -f 1)
            commitUrl=$(echo $line | cut -d " " -f 2)
            commitRepo=$(echo $line | cut -d " " -f 3)
+	   commitForce=$(echo $line | cut -d " " -f 4)
+
 	   if [ $commitId ] && [ $commitUrl ] && [ $commitRepo ];then
                # start picking
-               repopick $commitId -g $commitUrl -P $commitRepo
+               repopick $commitId -g $commitUrl -P $commitRepo -f
            fi
        fi
     done <$i
