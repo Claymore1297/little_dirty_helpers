@@ -27,9 +27,9 @@ if (empty($device)|| empty($type))
     echo "<h3>missing params device and type</h3>";
 }
 // base dir on local server
-$base_dir = "/var/www/html/builds";
+$base_dir = "/srv/http/builds";
 // base webserver URL
-$base_server_url = "http://fenris/builds/";
+$base_server_url = "http://mjolnir/builds/";
 // needed sub directory structure
 $builds_sub_dirs = "device/".$device."/".$type."/";
 // complete path
