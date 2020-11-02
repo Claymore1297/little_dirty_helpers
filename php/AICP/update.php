@@ -53,21 +53,21 @@ function getFileBuildUtc($CurrentZipFile)
     {
         while ($zip_entry = zip_read($zip))
         {
-            if (zip_entry_name($zip_entry) == "system/build.prop")
+            if (zip_entry_name($zip_entry) == "META-INF/com/android/metadata")
             {
                 if (zip_entry_open($zip, $zip_entry))
                 {
                     $contents = zip_entry_read($zip_entry);
-                    $getEachrow = explode(" ", $contents);
+                    $getEachrow = explode("\n", $contents);
                     for ($x = 0; $x < count($getEachrow); $x++)
+                    {
+                        preg_match("/post-timestamp=([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])/",$getEachrow[$x-1],$Matches);
+                        if ($Matches[0])
                         {
-                            preg_match("/ro.system.build.date.utc=([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])/",$getEachrow[$x-1],$Matches);
-                            if ($Matches[0])
-                        {
-                               $getRoBuildUtc = explode("=", $Matches[0]);
-                               $FileBuildUtc = $getRoBuildUtc[1];
-                            }
+                           $getRoBuildUtc = explode("=", $Matches[0]);
+                           $FileBuildUtc = $getRoBuildUtc[1];
                         }
+                    }
                     zip_entry_close($zip_entry);
                 }
             }
@@ -105,7 +105,7 @@ if ( is_dir ( $builds_complete_dirs ))
 		array_push($json_data_raw, array('datetime' => intval($UpdateUtc),
 			'filename' => $eachFile, 'id' => $UpdateMd5, 'romtype' => $type,
 			'size' => intval($UpdateFileSize), 'url' => $base_server_url.$builds_sub_dirs.$eachFile,
-			'version' => "q-15.0"));
+			'version' => "r-16.0"));
             }
 	}
     }
