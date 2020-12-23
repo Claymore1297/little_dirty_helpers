@@ -105,7 +105,7 @@ if ( is_dir ( $builds_complete_dirs ))
 		array_push($json_data_raw, array('datetime' => intval($UpdateUtc),
 			'filename' => $eachFile, 'id' => $UpdateMd5, 'romtype' => $type,
 			'size' => intval($UpdateFileSize), 'url' => $base_server_url.$builds_sub_dirs.$eachFile,
-			'version' => "r-16.0"));
+			'version' => "r-16.1"));
             }
 	}
     }
