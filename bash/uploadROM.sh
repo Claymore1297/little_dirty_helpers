@@ -53,7 +53,7 @@ user $USER $PASSWORD
 cd $RPATH
 pwd
 lcd $LPATH
-put $FILETOUPLOAD.md5sum
+put $FILETOUPLOAD.sha256sum
 put $FILETOUPLOAD
 bye
 EOF
