@@ -26,6 +26,8 @@ EOM
 SourceDir=$1
 DestDir=$2
 
+# rename files with blanks first
+for f in $SourceDir/*\ *; do mv "$f" "${f// /_}"; done
 getallFiles=$(ls $SourceDir/*)
 
 for i in $getallFiles;do
