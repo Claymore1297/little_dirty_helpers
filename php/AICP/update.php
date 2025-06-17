@@ -1,7 +1,6 @@
 <?php
 /*
- * Copyright (C) 2018 AICP
- * Copyright (C) 2019 AICP
+ * Copyright (C) 2018-2025 AICP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+# send headers
+header_remove();
+header("Cache-Control: no-transform,public,max-age=300,s-maxage=900");
+header('Content-Type: application/json');
+
 $json_data = array();
 $json_data_raw = array();
 // get device
@@ -92,7 +96,7 @@ if ( is_dir ( $builds_complete_dirs ))
         // read dir
         while (($eachFile = readdir($handle)) !== false)
         {
-            if (preg_match("/aicp_".$device."/i", $eachFile))
+            if (preg_match("/aicp_".$device."/", $eachFile))
 	    {
                 $flag_builds_found = 1;
                 $SplitFileName1 = explode($type."-", $eachFile);
@@ -105,7 +109,7 @@ if ( is_dir ( $builds_complete_dirs ))
 		array_push($json_data_raw, array('datetime' => intval($UpdateUtc),
 			'filename' => $eachFile, 'id' => $UpdateMd5, 'romtype' => $type,
 			'size' => intval($UpdateFileSize), 'url' => $base_server_url.$builds_sub_dirs.$eachFile,
-			'version' => "r-16.1"));
+			'version' => "v-20.0"));
             }
 	}
     }
@@ -115,6 +119,7 @@ if ( is_dir ( $builds_complete_dirs ))
         $json_data ['response'] = $json_data_raw;
         $json = json_encode($json_data, JSON_UNESCAPED_SLASHES);
         // return json object
+        header('Status: 200');
         echo $json;
     }
 }
