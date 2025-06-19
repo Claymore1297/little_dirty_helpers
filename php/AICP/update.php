@@ -24,7 +24,7 @@ $json_data_raw = array();
 // get device
 $device = $_GET['device'];
 // get type
-$type = $_GET['type'];
+$type = strtoupper($_GET['type']);
 // check call params
 if (empty($device)|| empty($type))
 {
