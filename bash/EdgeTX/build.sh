@@ -63,7 +63,6 @@ echo "Release-Type:	$RELEASE_TYPE"
 echo
 
 DATE=$(date +%Y%m%d)
-DEST_FILE="EdgeTX_${BRANCH}_${BOARD}_MODE${MODE}_${RELEASE_TYPE}_${DATE}.bin"
 
 
 cd $SRC_DIR
@@ -72,6 +71,21 @@ if [ "$build_mode" -eq 2 ]; then
     [ -d "$GIT_DIR" ] && rm -rf "$GIT_DIR"
     git clone --recursive -b $BRANCH https://github.com/Claymore1297/edgetx.git $GIT_DIR
 fi
+
+get_version() {
+  local file="$1"
+
+  local MAJOR=$(grep -oP 'set\(VERSION_MAJOR "\K[^"]+' "$file")
+  local MINOR=$(grep -oP 'set\(VERSION_MINOR "\K[^"]+' "$file")
+  local REVISION=$(grep -oP 'set\(VERSION_REVISION "\K[^"]+' "$file")
+  local CODENAME=$(grep -oP 'set\(CODENAME "\K[^"]+' "$file")
+
+  echo "${MAJOR}.${MINOR}.${REVISION}-${CODENAME}"
+}
+
+VERSION=$(get_version $GIT_DIR/CMakeLists.txt)
+DEST_FILE="EdgeTX_${VERSION}_${BOARD}_MODE${MODE}_${RELEASE_TYPE}_${DATE}.bin"
+
 cd $BASE_PATH
 
 if [ "$build_mode" -eq 2 ]; then
