@@ -42,6 +42,19 @@ case "$1" in
     ;;
 esac
 
+case "$2" in
+  TS16S)
+    PCB="T10"
+    ;;
+  POCKET)
+    PCB="T7"
+    ;;
+  *)
+    echo "unknown board: $2"
+    exit 3
+    ;;
+esac
+
 echo
 
 if [ "$#" -lt 4 ]; then
@@ -93,7 +106,7 @@ if [ "$build_mode" -eq 2 ]; then
 fi
 cd $OUT_DIR
 cmake -LAH $SRC_DIR/$GIT_DIR > ~/edgetx_main-cmake-options.txt
-cmake -DPCB=X10 -DPCBREV=$BOARD -DDEFAULT_MODE=$MODE -DGVARS=YES -DLUA_MIXER=YES -DCMAKE_BUILD_TYPE=Debug $SRC_DIR/$GIT_DIR
+cmake -DPCB=$PCB -DPCBREV=$BOARD -DDEFAULT_MODE=$MODE -DGVARS=YES -DLUA_MIXER=YES -DCMAKE_BUILD_TYPE=Debug $SRC_DIR/$GIT_DIR
 make configure
 make firmware
 cd arm-none-eabi
