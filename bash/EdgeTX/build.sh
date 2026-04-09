@@ -41,13 +41,14 @@ case "$1" in
     exit 1
     ;;
 esac
-
+# set a invalid value as default
+PCB="XXX"
 case "$2" in
-  TS16S)
-    PCB="T10"
+  TX16S)
+    PCB="X10"
     ;;
   POCKET)
-    PCB="T7"
+    PCB="X7"
     ;;
   *)
     echo "unknown board: $2"
@@ -71,6 +72,7 @@ MODE=$3
 RELEASE_TYPE=$4
 
 echo "Board:		$BOARD"
+echo "PCB:		$PCB"
 echo "Default-Mode:	$MODE"
 echo "Release-Type:	$RELEASE_TYPE"
 echo
