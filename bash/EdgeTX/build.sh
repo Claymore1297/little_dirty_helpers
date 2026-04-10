@@ -44,9 +44,13 @@ case "$1" in
     echo "Build-Mode:	clean"
     build_mode="3"
     ;;
+  comp-sim)
+    echo "Build-Mode:	comp-sim"
+    build_mode="4"
+    ;;
   *)
     echo "unknown build-mode: $1"
-    echo "Usage: $0 {build|clean|clone}"
+    echo "Usage: $0 {build|clean|clone|comp-sim}"
     exit 1
     ;;
 esac
@@ -66,8 +70,8 @@ case "$2" in
 esac
 
 if [ "$#" -lt 4 ]; then
-    echo "Usage: $0 {build|clean|clone} <Board> <Default-Mode-ID> <Release-Type>"
-    echo "Usage: $0 {build|clean|clone} TX16S 1 Debug"
+    echo "Usage: $0 {build|clean|clone|comp-sim} <Board> <Default-Mode-ID> <Release-Type>"
+    echo "Usage: $0 {build|clean|clone|comp-sim} TX16S 1 Debug"
   exit 2
 fi
 
@@ -117,9 +121,18 @@ cd $OUT_DIR
 cmake -LAH $SRC_DIR/$GIT_DIR > ~/edgetx_main-cmake-options.txt
 cmake -DPCB=$PCB -DPCBREV=$BOARD -DDEFAULT_MODE=$MODE -DGVARS=YES -DLUA_MIXER=YES -DCMAKE_BUILD_TYPE=Debug $SRC_DIR/$GIT_DIR
 make configure
-make firmware
-cd arm-none-eabi
-cp firmware.bin $OUT_DIR/$DEST_FILE
-echo Firmware created: $OUT_DIR/$DEST_FILE
+
+if [ "$build_mode" -eq 4 ]; then
+    cd $SRC_DIR/$GIT_DIR
+    cmake --build ../../out --parallel --target firmware --target wasi-module --target companion --target simulator
+    cd $OUT_DIR
+    cp -v wasm/wasm-build/*.wasm native/
+    echo Companion and simulator created on $OUT_DIR/native
+else
+    make firmware
+    cd arm-none-eabi
+    cp firmware.bin $OUT_DIR/$DEST_FILE
+    echo Firmware created: $OUT_DIR/$DEST_FILE
+fi
 exit 0
 
