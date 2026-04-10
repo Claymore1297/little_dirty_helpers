@@ -40,9 +40,13 @@ case "$1" in
     echo "Build-Mode:	clean"
     build_mode="2"
     ;;
+  clone)
+    echo "Build-Mode:	clean"
+    build_mode="3"
+    ;;
   *)
     echo "unknown build-mode: $1"
-    echo "Usage: $0 {build|clean|no-clone}"
+    echo "Usage: $0 {build|clean|clone}"
     exit 1
     ;;
 esac
@@ -62,8 +66,8 @@ case "$2" in
 esac
 
 if [ "$#" -lt 4 ]; then
-    echo "Usage: $0 {build|clean|no-clone} <Board> <Default-Mode-ID> <Release-Type>"
-    echo "Usage: $0 {build|clean|no-clone} TX16S 1 Debug"
+    echo "Usage: $0 {build|clean|clone} <Board> <Default-Mode-ID> <Release-Type>"
+    echo "Usage: $0 {build|clean|clone} TX16S 1 Debug"
   exit 2
 fi
 
@@ -85,7 +89,7 @@ DATE=$(date +%Y%m%d)
 
 cd $SRC_DIR
 
-if [ "$build_mode" -eq 2 ]; then
+if [ "$build_mode" -eq 3 ]; then
     [ -d "$GIT_DIR" ] && rm -rf "$GIT_DIR"
     git clone --recursive -b $BRANCH https://github.com/Claymore1297/edgetx.git $GIT_DIR
 fi
