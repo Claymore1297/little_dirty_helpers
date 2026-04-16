@@ -121,11 +121,14 @@ make configure
 if [ "$build_mode" -eq 4 ]; then
     cd $SRC_DIR/$GIT_DIR
     cmake --build ../../out --parallel --target firmware --target wasi-module --target companion --target simulator
-    cd $OUT_DIR
-    cp -v wasm/wasm-build/*.wasm native/
-    echo Companion and simulator created on $OUT_DIR/native
-    echo Starting simulator
-    ./$out/native/simulator30
+    getRC=$?
+    if [ $getRC == "0" ];then
+        cd $OUT_DIR
+        cp -v wasm/wasm-build/*.wasm native/
+        echo Companion and simulator created on $OUT_DIR/native
+        echo Starting simulator
+        ./$out/native/simulator30
+    fi
 else
     make firmware
     cd arm-none-eabi
