@@ -15,10 +15,6 @@
 
 . ./setenv.sh
 
-BASE_PATH="/home/julian/git_Sandbox/edgetx"
-SRC_DIR=$BASE_PATH/src
-OUT_DIR=$BASE_PATH/out
-
 echo
 echo "
 ███████╗██████╗  ██████╗ ███████╗████████╗██╗  ██╗    ██████╗ ██╗   ██╗██╗██╗     ██████╗ 
@@ -128,6 +124,8 @@ if [ "$build_mode" -eq 4 ]; then
     cd $OUT_DIR
     cp -v wasm/wasm-build/*.wasm native/
     echo Companion and simulator created on $OUT_DIR/native
+    echo Starting simulator
+    ./$out/native/simulator30
 else
     make firmware
     cd arm-none-eabi

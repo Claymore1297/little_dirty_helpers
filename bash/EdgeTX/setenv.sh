@@ -13,6 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+BASE_PATH="/home/julian/git_Sandbox/edgetx"
+SRC_DIR=$BASE_PATH/src
+OUT_DIR=$BASE_PATH/out
 TOOLSCHAIN_BASE="/home/julian/git_Sandbox/edgetx/tools"
 [ ! -d "$TOOLSCHAIN_BASE" ] && mkdir "$TOOLSCHAIN_BASE"
 
