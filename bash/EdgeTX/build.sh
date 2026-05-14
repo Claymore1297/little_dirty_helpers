@@ -56,6 +56,9 @@ case "$2" in
   TX16S)
     PCB="X10"
     ;;
+  T15)
+    PCB="X10"
+    ;;
   POCKET)
     PCB="X7"
     ;;
