@@ -94,7 +94,7 @@ cd $SRC_DIR
 
 if [ "$build_mode" -eq 3 ]; then
     [ -d "$GIT_DIR" ] && rm -rf "$GIT_DIR"
-    git clone --recursive -b $BRANCH https://github.com/Claymore1297/edgetx.git $GIT_DIR
+    git clone --recursive -b $BRANCH https://github.com/edgetx/edgetx.git $GIT_DIR
 fi
 
 get_version() {
